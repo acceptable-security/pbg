@@ -1,17 +1,20 @@
 {
     "files": {
-        "sourceGlob": "./tests/tcc_forth/tcc-0.9.27/*.c"
+        "sourceGlob": "./tests/tcc/tcc-0.9.27/*.c"
     },
     "elf": {
-        "binary": "./tests/tcc_forth/tcc-0.9.27/tcc"
+        "binary": "./tests/tcc/tcc-0.9.27/tcc"
     },
-   "instrace": {
-        "insTraceFile": "./tests/tcc_forth/instrace.tcc.01770.0000.log"
+    "rawmemtrace": {
+        "cmdLine": "./tests/tcc_forth/tcc-0.9.27/tcc ~/Downloads/sqliasdfte3.c -ldl -lpthread -shared -o a.a"
+    },
+    "instrace": {
+        "insTraceFile": "./tests/tcc/instrace.tcc.01770.0000.log"
     },
     "memtrace": {
-        "memTraceFile": "./tests/tcc_forth/memtrace.txt"
+        "memTraceFile": "./tests/tcc/memtrace.txt"
     },
     "cachemiss": {
-        "cacheMissFile": "./tests/tcc_forth/cache_miss.csv"
+        "cacheMissFile": "./tests/tcc/cache_miss.csv"
     }
 }

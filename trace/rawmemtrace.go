@@ -3,6 +3,7 @@ package trace;
 import (
 	"compress/gzip"
 	"log"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"bufio"
@@ -45,12 +46,20 @@ func loadRawMemTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interface{
 		args = append(args, arg)
 	}
 
+	log.Printf("Executing drcachesim (%s %s)...\n", total_path, args)
+
+
 	cmdObj := exec.Command(total_path, args...)
 
-	log.Printf("Executing drcachesim...\n")
 
 	// Start execution and get stdout
-	cmdObj.Start()
+	stderrObj, err := cmdObj.StderrPipe()
+
+	if err != nil {
+		panic(err)
+		return
+	}
+
 	stdoutObj, err := cmdObj.StdoutPipe()
 
 	if err != nil {
@@ -58,14 +67,18 @@ func loadRawMemTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interface{
 		return
 	}
 
+
+	cmdObj.Start()
+
+
 	// Input parsing similar to memtrace.py.
 	pbg.AddRelationFunc(func(ch chan []string) {
-		scanner := bufio.NewScanner(stdoutObj)
+		scanner := bufio.NewScanner(stderrObj)
 		
 		for scanner.Scan() {
 			text := scanner.Text()
 
-			if text[:2] != "::" || !strings.Contains(text, "@") {
+			if len(text) < 3 || text[:2] != "::" || !strings.Contains(text, "@") {
 				continue
 			}
 
@@ -85,6 +98,9 @@ func loadRawMemTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interface{
 
 		close(ch)
 	})
+ 
+	slurp, _ := ioutil.ReadAll(stdoutObj)
+	log.Printf("Output: %s\n", slurp)
 
 	file, err := os.Open("./.tmp_cache.gz")
 

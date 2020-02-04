@@ -182,9 +182,22 @@ func ExecuteProviders(pbg *ProgramBehaviorGraph, whitelist []string) {
 		dep := heap.Pop(&providerQueue).(*Item).value;
 		opt, _ := pbg.options[dep];
 
-		if len(whitelist) > 0 && sort.SearchStrings(whitelist, dep) >= len(whitelist) {
-			log.Printf("Skipping stage %s for not being in whitelist...\n", dep);
-			continue
+		if len(whitelist) > 0 && whitelist[0] != "" {
+			found := false
+
+			for _, obj := range whitelist {
+				if obj == dep {
+					found = true
+					break
+				}
+			}
+
+			if ( !found ) {
+				log.Printf("Skipping stage %s for not being in whitelist (%d)...\n", dep, len(whitelist));
+				continue
+			}
+		} else {
+			log.Printf("Whitelist: %s (%d)\n", whitelist, sort.SearchStrings(whitelist, dep))
 		}
 
 		log.Printf("Executing %s...\n", dep);

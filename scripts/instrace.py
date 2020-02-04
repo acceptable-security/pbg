@@ -16,16 +16,19 @@ if __name__ == "__main__":
 	home = os.environ['DYNAMORIO_HOME']
 	drrun = os.path.join(home, "bin64/drrun")
 
-	print(home, drrun)
+	output = ""
 
 	instrace_folder = os.path.join(home, "../build_samples/bin/")
 	instrace = os.path.join(instrace_folder, "libinstrace_x86_text.so")
 
-	output = subprocess.check_output(
-		drrun + ' -c ' + instrace +  ' -verbose 5 -- ' + ' '.join(sys.argv[1:]),
-		stderr = subprocess.STDOUT,
-		shell = True
-	)
+	try:
+		output = subprocess.check_output(
+			drrun + ' -c ' + instrace +  ' -verbose 5 -- ' + ' '.join(sys.argv[1:]),
+			stderr = subprocess.STDOUT,
+			shell = True
+		)
+	except subprocess.CalledProcessError as e:
+		output = e.output
 
 	lines = str(output).split('\\n')
 

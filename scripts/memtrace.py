@@ -52,4 +52,4 @@ if __name__ == "__main__":
 		f.write(cache_data.decode('ascii'))
 		f.close()
 	except subprocess.CalledProcessError as e:
-		print("Failed:", file=sys.stderr, e.output)
+		print("Failed:", e.output, file=sys.stderr)
