@@ -1,0 +1,17 @@
+{
+    "files": {
+        "sourceGlob": "./tests/tcc_real/tcc-0.9.27/*.c"
+    },
+    "elf": {
+        "binary": "./tests/tcc_real/tcc-0.9.27/tcc"
+    },
+   "instrace": {
+        "insTraceFile": "./tests/tcc_real/instrace.tcc.01770.0000.log"
+    },
+    "memtrace": {
+        "memTraceFile": "./tests/tcc_real/memtrace.txt"
+    },
+    "cachemiss": {
+        "cacheMissFile": "./tests/tcc_real/cache_miss.csv"
+    }
+}

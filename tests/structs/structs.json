@@ -1,0 +1,11 @@
+{
+    "files": {
+        "sourceFiles": [ "./tests/structs/test.c" ]
+    },
+    "elf": {
+        "binary": "./tests/structs/test"
+    },
+    "clang": {
+    	"sysIncludePaths": [ "/usr/include" ]
+    }
+}

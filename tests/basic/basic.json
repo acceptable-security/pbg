@@ -1,0 +1,14 @@
+{
+    "files": {
+        "sourceFiles": [ "./tests/basic/test.c" ]
+    },
+    "elf": {
+        "binary": "./tests/basic/test"
+    },
+    "clang": {
+    	"sysIncludePaths": [ "/usr/include" ]
+    },
+    "instrace": {
+    	"traceFile": "./tests/basic/instrace.test.13012.0000.log"
+    }
+}
