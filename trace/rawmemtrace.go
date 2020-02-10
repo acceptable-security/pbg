@@ -108,6 +108,8 @@ func loadRawMemTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interface{
 		panic(err)
 	}
 
+	defer file.Close()
+
 	reader, err := gzip.NewReader(file)
 
 	if err != nil {
