@@ -22,3 +22,6 @@ pbg
 *.pdf
 *.db
 tests/**/*.txt
+
+*.gz
+*.a

@@ -39,7 +39,10 @@ func loadRawInstrTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interfac
 	// Create execution object
 	total_path := path.Join(env, "bin64/drrun")
 
-	args := []string{ "-c", "instrace", "-verbose", "5", "--" }
+	instrace_folder := path.Join(env, "../build_samples/bin/")
+	instrace := path.Join(instrace_folder, "libinstrace_x86_text.so")
+
+	args := []string{ "-c", instrace, "-verbose", "5", "--" }
 
 	for _, arg := range strings.Split(cmdLine, " ") {
 		args = append(args, arg)
