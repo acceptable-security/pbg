@@ -53,7 +53,7 @@ func loadRawInstrTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interfac
 	cmdObj := exec.Command(total_path, args...)
 
 
-	stdoutObj, err := cmdObj.StderrPipe()
+	stdoutObj, err := cmdObj.StdoutPipe()
 
 	if err != nil {
 		panic(err)
