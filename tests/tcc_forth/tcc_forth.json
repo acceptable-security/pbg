@@ -6,7 +6,7 @@
         "binary": "./tests/tcc/tcc-0.9.27/tcc"
     },
     "rawmemtrace": {
-        "cmdLine": "./tests/tcc_forth/tcc-0.9.27/tcc ~/Downloads/sqliasdfte3.c -ldl -lpthread -shared -o a.a"
+        "cmdLine": "./tests/tcc_forth/tcc-0.9.27/tcc /home/null/Downloads/sqlite3.c -ldl -lpthread -shared -o ./a.a"
     },
     "instrace": {
         "insTraceFile": "./tests/tcc/instrace.tcc.01770.0000.log"

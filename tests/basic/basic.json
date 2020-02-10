@@ -13,5 +13,8 @@
     },
     "rawmemtrace": {
         "cmdLine": "./tests/basic/test"
+    },
+    "rawinstrtrace": {
+        "cmdLine": "./tests/basic/test"
     }
 }
