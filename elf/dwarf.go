@@ -577,7 +577,8 @@ func readDwarfCU(pbg *graph.ProgramBehaviorGraph, entry *dwarf.Entry, dwarfReade
 			} else if entry.Tag == 0 {
 				break
 			} else {
-				panic(fmt.Errorf("Unknown tag %v in CU", entry.Tag))
+				log.Printf("Unknown tag %v in CU", entry.Tag)
+				dwarfReader.SkipChildren()
 			}
 		}
 	}
@@ -606,7 +607,7 @@ func readDwarf(pbg *graph.ProgramBehaviorGraph, dwarfObj *dwarf.Data) {
 				panic(err)
 			}
 
-		readDwarfCULine(pbg, entry.AttrField(dwarf.AttrName).Val.(string), lineReader)
+			readDwarfCULine(pbg, entry.AttrField(dwarf.AttrName).Val.(string), lineReader)
 			readDwarfCU(pbg, entry, dwarfReader)
 		} else if entry.Tag == dwarf.TagBaseType {
 			panic(fmt.Errorf("Unknown tag %v at root", entry.Tag))
