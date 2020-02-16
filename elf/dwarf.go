@@ -167,7 +167,8 @@ func readDwarfBlock(pbg *graph.ProgramBehaviorGraph, entry *dwarf.Entry, dwarfRe
 			} else if entry.Tag == dwarf.TagSubroutineType {
 				readDwarfSubroutineType(pbg, entry, dwarfReader)
 			} else {
-				panic(fmt.Errorf("Unknown tag %v in block", entry.Tag))
+				log.Printf("Unknown tag %v in block", entry.Tag)
+				dwarfReader.SkipChildren()
 			}
 		}
 	}
@@ -364,7 +365,8 @@ func readDwarfArrayType(pbg *graph.ProgramBehaviorGraph, entry *dwarf.Entry, dwa
 			} else if entry.Tag == 0 {
 				break
 			} else {
-				panic(fmt.Errorf("Unknown tag %v in array type", entry.Tag))
+				log.Printf("Unknown tag %v in array type", entry.Tag)
+				dwarfReader.SkipChildren()
 			}
 		}
 	}
@@ -446,7 +448,8 @@ func readDwarfEnumeration(pbg *graph.ProgramBehaviorGraph, entry *dwarf.Entry, d
 			} else if entry.Tag == 0 {
 				break
 			} else {
-				panic(fmt.Errorf("Unknown tag %v in array type", entry.Tag))
+				log.Printf("Unknown tag %v in array type", entry.Tag)
+				dwarfReader.SkipChildren()
 			}
 		}
 	}
@@ -494,7 +497,8 @@ func readDwarfSubroutineType(pbg *graph.ProgramBehaviorGraph, entry *dwarf.Entry
 			} else if entry.Tag == 0 {
 				break
 			} else {
-				panic(fmt.Errorf("Unknown tag %v in subroutine type", entry.Tag))
+				log.Printf("Unknown tag %v in subroutine type", entry.Tag)
+				dwarfReader.SkipChildren()
 			}
 		}
 	}
