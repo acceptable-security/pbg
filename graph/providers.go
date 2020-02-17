@@ -202,11 +202,23 @@ func ExecuteProviders(pbg *ProgramBehaviorGraph, whitelist []string) {
 
 		log.Printf("Executing %s...\n", dep);
 		start := time.Now()
+
+		if resv, ok := opt["reservoir"]; ok {
+			resvSize := resv.(int)
+			pbg.SetReservoir(resvSize)
+		}
+
+		// Execute the provider
 		log.SetPrefix("[" + strings.ToUpper(dep) + "] ")
 		PBGProviderList[dep](pbg, opt);
 		log.SetPrefix("[PBG] ")
+
+		// Disable reservoir and flush if possible
+		pbg.SetReservoir(0)
+
 		end := time.Now()
 		elapsed := end.Sub(start)
+
 
 		log.Printf("Finished %s in %s", dep, elapsed.String())
 	}

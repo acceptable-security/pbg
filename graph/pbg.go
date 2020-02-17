@@ -3,6 +3,8 @@ package graph
 import (
 	"context"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/cayleygraph/cayley"
 	"github.com/cayleygraph/cayley/graph"
@@ -23,6 +25,10 @@ type ProgramBehaviorGraph struct {
 	// Automatically handle bulking
 	autoBulk int
 	bulkBuf [][]string
+
+	reservoirIndex int
+	reservoirSize int
+	reservoir [][]string 
 }
 
 // Constructs a new ProgramBehaviorGraph object from a dbpath and handler.
@@ -83,6 +89,7 @@ func (pbg *ProgramBehaviorGraph) AddRelation(from string, rel string, to string)
 	}
 }
 
+// Enable functionality for AddRelation to use in memory-bulking
 func (pbg *ProgramBehaviorGraph) SetAutoBulk(count int) {
 	pbg.autoBulk = count
 
@@ -97,8 +104,44 @@ func (pbg *ProgramBehaviorGraph) SetAutoBulk(count int) {
 	}
 }
 
+// Enable reservoir handling
+func (pbg *ProgramBehaviorGraph) SetReservoir(count int) {
+	rand.Seed(time.Now().UnixNano())
+
+	pbg.reservoirIndex = 0
+	pbg.reservoirSize = count
+
+	if count > 0 {
+		pbg.reservoir = make([][]string, 0)
+	} else {
+		if len(pbg.reservoir) > 0 {
+			// Commit reservoir
+			pbg.AddRelationBulk(pbg.reservoir)
+			pbg.reservoir = pbg.reservoir[:0]
+		}
+	}
+}
+
+// Add to reservoir
+func (pbg *ProgramBehaviorGraph) AddRelationReservoir(data [][]string) {
+	for _, piece := range data {
+		if pbg.reservoirIndex < pbg.reservoirSize {
+			pbg.reservoir = append(pbg.reservoir, piece)
+		} else {
+			if rnd := rand.Intn(pbg.reservoirIndex); rnd < pbg.reservoirSize {
+				pbg.reservoir[rnd] = piece
+			}
+		}
+	}
+}
+
 // Executes a bulk form of AddRelation. Assumes that the array contains a list of 3-lists
 func (pbg *ProgramBehaviorGraph) AddRelationBulk(data [][]string) {
+	if pbg.reservoirSize > 0 {
+		pbg.AddRelationReservoir(data)
+		return
+	}
+
 	quads := make([]quad.Quad, len(data));
 
 	for _, piece := range data {
