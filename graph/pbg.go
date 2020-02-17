@@ -19,6 +19,10 @@ type ProgramBehaviorGraph struct {
 	store *cayley.Handle	
 	session query.Session
 	options map [string] map[string] interface{}
+
+	// Automatically handle bulking
+	autoBulk int
+	bulkBuf [][]string
 }
 
 // Constructs a new ProgramBehaviorGraph object from a dbpath and handler.
@@ -67,7 +71,30 @@ func (pbg *ProgramBehaviorGraph) SetOptions(provider string, options map[string]
 // Adds a triplet relation (subject, verb, object) to the graph. This API may change
 // in the future to support contexts.
 func (pbg *ProgramBehaviorGraph) AddRelation(from string, rel string, to string) {
-	pbg.store.AddQuad(quad.Make(from, rel, to, nil));
+	if pbg.autoBulk > 0 {
+		pbg.bulkBuf = append(pbg.bulkBuf, []string{ from, rel, to });
+
+		if len(pbg.bulkBuf) > pbg.autoBulk {
+			pbg.AddRelationBulk(pbg.bulkBuf)
+			pbg.bulkBuf = pbg.bulkBuf[:0]
+		}
+	} else {
+		pbg.store.AddQuad(quad.Make(from, rel, to, nil));
+	}
+}
+
+func (pbg *ProgramBehaviorGraph) SetAutoBulk(count int) {
+	pbg.autoBulk = count
+
+	if count > 0 {
+		pbg.bulkBuf = make([][]string, 0)
+	} else {
+		// Left over in bulk buffer
+		if len(pbg.bulkBuf) > 0 {
+			pbg.AddRelationBulk(pbg.bulkBuf)
+			pbg.bulkBuf = pbg.bulkBuf[:0]
+		}
+	}
 }
 
 // Executes a bulk form of AddRelation. Assumes that the array contains a list of 3-lists

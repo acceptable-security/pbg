@@ -590,6 +590,7 @@ func readDwarfCU(pbg *graph.ProgramBehaviorGraph, entry *dwarf.Entry, dwarfReade
 
 func readDwarf(pbg *graph.ProgramBehaviorGraph, dwarfObj *dwarf.Data) {
 	dwarfReader := dwarfObj.Reader()
+	pbg.SetAutoBulk(1000)
 
 	for {
 		entry, err := dwarfReader.Next()
@@ -617,4 +618,6 @@ func readDwarf(pbg *graph.ProgramBehaviorGraph, dwarfObj *dwarf.Data) {
 			panic(fmt.Errorf("Unknown tag %v at root", entry.Tag))
 		}
 	}
+
+	pbg.SetAutoBulk(0)
 }
