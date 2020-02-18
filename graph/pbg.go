@@ -142,7 +142,7 @@ func (pbg *ProgramBehaviorGraph) AddRelationBulk(data [][]string) {
 		return
 	}
 
-	quads := make([]quad.Quad, len(data));
+	quads := make([]quad.Quad, 0);
 
 	for _, piece := range data {
 		if len(piece) != 3 {
