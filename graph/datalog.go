@@ -15,6 +15,7 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 		panic(err)
 	}
 
+	defer file.Close()
 	writer := bufio.NewWriter(file)
 
 	ch := pbg.QueryTripletAsync("g.V().Tag('subject').Out(null, 'predicate').Tag('object').All()")
@@ -29,5 +30,4 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	}
 
 	writer.Flush()
-	file.Close()
 }
