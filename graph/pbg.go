@@ -276,7 +276,7 @@ func (pbg *ProgramBehaviorGraph) QueryTripletAsync(qu string) chan PBGTriplet {
 
 	go func(ch chan PBGTriplet) {
 		it, err := pbg.session.Execute(ctx,  qu, query.Options{
-				Collation: query.Raw
+			Collation: query.Raw
 		})
 
 		if err != nil {
