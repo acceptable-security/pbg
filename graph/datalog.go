@@ -25,6 +25,6 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 			writer.WriteString(".decl " + triplet.predicate + "(from symbol, to symbol)\n")
 		}
 
-		writer.WriteString(triplet.predicate + "(\"" + triplet.subject + ", " + triplet.object + ")")
+		writer.WriteString(triplet.predicate + "(\"" + triplet.subject + ", " + triplet.object + ")\n")
 	}
 }
