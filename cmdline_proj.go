@@ -80,7 +80,7 @@ func projQueryCmd() {
 
 		if *queryDraw != "" {
 			pbg.Draw(string(queryString), *queryDraw)
-		} else  else {
+		} else {
 			results, err := pbg.Query(string(queryString))
 
 			if err != nil {
