@@ -2,14 +2,25 @@ package graph;
 
 import (
 	"github.com/emicklei/dot"
+	"os"
+	"bufio"
 )
 
-func (pbg *ProgramBehaviorGraph) Draw(query string) string {
+func (pbg *ProgramBehaviorGraph) Draw(query string, filename string) {
 	out, err := pbg.QueryTriplet(query)
 
 	if err != nil {
 		panic(err)
 	}
+
+	file, err := os.Open(filename)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+	writer := bufio.NewWriter(file)
 
 	g := dot.NewGraph(dot.Directed)
 	g.Attr("size", "7.75,10.25")
@@ -28,5 +39,5 @@ func (pbg *ProgramBehaviorGraph) Draw(query string) string {
 		nodes[item.subject].Edge(nodes[item.object], item.predicate)
 	}
 
-	return g.String()
+	writer.WriteString(g.String())
 }

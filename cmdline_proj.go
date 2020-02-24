@@ -59,7 +59,8 @@ func projQueryCmd() {
 	queryDb := queryCmd.String("db", "", "database file path")
 	queryBackend := queryCmd.String("backend", "leveldb", "database backend")
 	queryQuery := queryCmd.String("query", "", "query file path")
-	queryDraw := queryCmd.String("draw", "", "picture to draw output of")
+	queryDraw := queryCmd.String("draw", "", "location to write graphviz output")
+	queryDatalog := queryCmd.String("datalog", "", "location to write datalog output")
 
 	queryCmd.Parse(os.Args[3:])
 
@@ -75,7 +76,11 @@ func projQueryCmd() {
 		panic(err)
 	}
 
-	if *queryDraw == "" {
+	if *queryDraw != "" {
+		pbg.Draw(string(queryString), *queryDraw)
+	} else if *queryDatalog != "" {
+		pbg.GenerateDatalog(string(queryString), *queryDraw)
+	} else {
 		results, err := pbg.Query(string(queryString))
 
 		if err != nil {
@@ -84,11 +89,7 @@ func projQueryCmd() {
 
 		for i, res := range results {
 			log.Printf("%d: %s\n", i, res)
-		}			
-	} else {
-		dot := pbg.Draw(string(queryString))
-
-		fmt.Println(dot)
+		}
 	}
 }
 
