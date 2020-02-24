@@ -269,3 +269,42 @@ func (pbg *ProgramBehaviorGraph) QueryTriplet(qu string) ([]PBGTriplet, error) {
 
 	return results, nil;
 }
+
+func (pbg *ProgramBehaviorGraph) QueryTripletAsync(qu string) chan PBGTriplet {
+	ctx := context.TODO()
+	ch := make(chan PBGTriplet, 0)
+
+	go func(ch chan PBGTriplet) {
+		it, err := pbg.session.Execute(ctx,  qu, query.Options{
+				Collation: query.Raw,
+				Limit: PBG_QUERY_LIMIT,
+		})
+
+		if err != nil {
+			panic(err)
+		}
+
+		for it.Next(ctx) {
+			data := it.Result().(*gizmo.Result)
+
+			if data.Val == nil {
+				subject := quad.StringOf(pbg.store.NameOf(data.Tags["subject"]))
+				predicate := quad.StringOf(pbg.store.NameOf(data.Tags["predicate"]))
+				object := quad.StringOf(pbg.store.NameOf(data.Tags["object"]))
+
+				ch <- PBGTriplet { subject, predicate, object }
+			} else {
+				panic("Failed to get triplet")
+			}
+		}
+
+		if err := it.Err(); err != nil {
+			panic(err)
+		}
+
+		close(ch)
+	}(ch)
+
+
+	return ch;
+}
