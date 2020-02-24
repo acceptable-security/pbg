@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func (pbg *ProgramBehaviorGraph) GenerateDatalog(query string, filename string) {
+func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	var foundRels map [string] bool
 
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0755)
