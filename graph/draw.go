@@ -13,7 +13,7 @@ func (pbg *ProgramBehaviorGraph) Draw(query string, filename string) {
 		panic(err)
 	}
 
-	file, err := os.Open(filename)
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0755)
 
 	if err != nil {
 		panic(err)
