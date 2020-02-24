@@ -1,6 +1,7 @@
 package graph;
 
 import (
+	"fmt"
 	"bufio"
 	"os"
 )
@@ -14,7 +15,6 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 		panic(err)
 	}
 
-	defer file.Close()
 	writer := bufio.NewWriter(file)
 
 	ch := pbg.QueryTripletAsync("g.V().Tag('subject').Out(null, 'predicate').Tag('object').All()")
@@ -22,9 +22,12 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	for triplet := range ch {
 		if _, ok := foundRels[triplet.predicate]; !ok {
 			foundRels[triplet.predicate] = true;
-			writer.WriteString(".decl " + triplet.predicate + "(from symbol, to symbol)\n")
+			writer.WriteString(fmt.Sprintf(".decl %s(from symbol, to symbol)\n", triplet.predicate))
 		}
 
-		writer.WriteString(triplet.predicate + "(\"" + triplet.subject + ", " + triplet.object + ")\n")
+		writer.WriteString(fmt.Sprintf("%s(\"%s\", \"%s\")\n", triplet.predicate, triplet.subject, triplet.object))
 	}
+
+	writer.Flush()
+	file.Close()
 }
