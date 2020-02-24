@@ -70,7 +70,7 @@ func projQueryCmd() {
 	}
 
 	if *queryDatalog != "" {
-		pbg.GenerateDatalog(*queryDraw)
+		pbg.GenerateDatalog(*queryDatalog)
 	} else {
 		queryString, err := ioutil.ReadFile(*queryQuery)
 
