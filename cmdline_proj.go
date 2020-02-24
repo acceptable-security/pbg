@@ -69,25 +69,27 @@ func projQueryCmd() {
 		panic(err)
 	}
 
-	queryString, err := ioutil.ReadFile(*queryQuery)
-
-	if err != nil {
-		panic(err)
-	}
-
-	if *queryDraw != "" {
-		pbg.Draw(string(queryString), *queryDraw)
-	} else if *queryDatalog != "" {
-		pbg.GenerateDatalog(string(queryString), *queryDraw)
+	if *queryDatalog != "" {
+		pbg.GenerateDatalog(*queryDraw)
 	} else {
-		results, err := pbg.Query(string(queryString))
+		queryString, err := ioutil.ReadFile(*queryQuery)
 
 		if err != nil {
 			panic(err)
 		}
 
-		for i, res := range results {
-			log.Printf("%d: %s\n", i, res)
+		if *queryDraw != "" {
+			pbg.Draw(string(queryString), *queryDraw)
+		} else  else {
+			results, err := pbg.Query(string(queryString))
+
+			if err != nil {
+				panic(err)
+			}
+
+			for i, res := range results {
+				log.Printf("%d: %s\n", i, res)
+			}
 		}
 	}
 }
