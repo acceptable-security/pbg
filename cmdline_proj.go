@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"os"
 	"io/ioutil"
-	"fmt"
 	"sort"
 	"strings"
 )
