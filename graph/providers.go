@@ -204,7 +204,7 @@ func ExecuteProviders(pbg *ProgramBehaviorGraph, whitelist []string) {
 		start := time.Now()
 
 		if resv, ok := opt["reservoir"]; ok {
-			resvSize := resv.(int)
+			resvSize := int(resv.(float64))
 			pbg.SetReservoir(resvSize)
 		}
 
