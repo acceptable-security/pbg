@@ -23,10 +23,10 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	for triplet := range ch {
 		if _, ok := foundRels[triplet.predicate]; !ok {
 			foundRels[triplet.predicate] = true;
-			writer.WriteString(fmt.Sprintf(".decl %s(from symbol, to symbol)\n", triplet.predicate))
+			writer.WriteString(fmt.Sprintf(".decl %s(from symbol, to symbol)\n", triplet.predicate[1:len(triplet.predicate)-1]))
 		}
 
-		writer.WriteString(fmt.Sprintf("%s(\"%s\", \"%s\")\n", triplet.predicate, triplet.subject, triplet.object))
+		writer.WriteString(fmt.Sprintf("%s(\"%s\", \"%s\")\n", triplet.predicate[1:len(triplet.predicate)-1], triplet.subject[1:len(triplet.subject)-1], triplet.object[1:len(triplet.object)-1]))
 	}
 
 	writer.Flush()
