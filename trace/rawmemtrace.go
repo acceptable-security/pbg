@@ -82,7 +82,7 @@ func loadRawMemTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interface{
 				continue
 			}
 
-			cmd := strings.Split(text[strings.Index(text, "@"):], " ");
+			cmd := strings.Split(text[strings.Index(text, "@") + 1:], " ");
 
 			if len(cmd) < 2 || (cmd[1] != "read" && cmd[1] != "write") {
 				continue
