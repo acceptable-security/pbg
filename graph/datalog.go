@@ -17,7 +17,7 @@ func getFilePred(filename string, pred string, files map[string] DestFile) *bufi
 		return obj.Writer
 	}
 
-	file, err := os.OpenFile(filename + "/" + pred + ".tsv", os.O_RDWR|os.O_CREATE, 0755)
+	file, err := os.OpenFile(filename + "/" + pred, os.O_RDWR|os.O_CREATE, 0755)
 
 	if err != nil {
 		panic(err)
