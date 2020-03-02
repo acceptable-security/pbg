@@ -22,7 +22,7 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	ch := pbg.QueryTripletAsync("g.V().Tag('subject').Out(null, 'predicate').Tag('object').All()")
 
 	for triplet := range ch {
-		pred = strings.ReplaceAll(triplet.predicate[1:len(triplet.predicate)-1], "-", "_")
+		pred := strings.ReplaceAll(triplet.predicate[1:len(triplet.predicate)-1], "-", "_")
 
 		if _, ok := foundRels[pred]; !ok {
 			foundRels[pred] = true;
