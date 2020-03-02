@@ -21,7 +21,7 @@ function resolveTypeName(typeId) {
 
 variables = g.V('main').Out("has-var").ToArray()
 
-var folder = "tests/tcc/tcc-0.9.27//"
+var folder = "tests/tcc/tcc-0.9.27/"
 var funcFile = g.V("main").In().ToArray()[0];
 
 for ( var i = 0; i < variables.length; i++ ) {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"bufio"
 	"os"
+	"strings"
 )
 
 func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
@@ -21,12 +22,14 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	ch := pbg.QueryTripletAsync("g.V().Tag('subject').Out(null, 'predicate').Tag('object').All()")
 
 	for triplet := range ch {
-		if _, ok := foundRels[triplet.predicate]; !ok {
-			foundRels[triplet.predicate] = true;
-			writer.WriteString(fmt.Sprintf(".decl %s(from symbol, to symbol)\n", triplet.predicate[1:len(triplet.predicate)-1]))
+		pred = strings.ReplaceAll(triplet.predicate[1:len(triplet.predicate)-1], "-", "_")
+
+		if _, ok := foundRels[pred]; !ok {
+			foundRels[pred] = true;
+			writer.WriteString(fmt.Sprintf(".decl %s(from symbol, to symbol)\n", pred))
 		}
 
-		writer.WriteString(fmt.Sprintf("%s(%s, %s)\n", triplet.predicate[1:len(triplet.predicate)-1], triplet.subject, triplet.object))
+		writer.WriteString(fmt.Sprintf("%s(%s, %s)\n", pred, triplet.subject, triplet.object))
 	}
 
 	writer.Flush()
