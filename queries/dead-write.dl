@@ -1,0 +1,25 @@
+#include "sqlite3.dl"
+
+.decl reachable(from: symbol, to: symbol)
+
+reachable(x, y) :- next_address(x, y).
+reachable(x, z) :- next_address(x, y), reachable(y, z).
+
+.decl not_dead_write(write1: symbol, write2: symbol)
+
+not_dead_write(x, z) :-
+	write_address(x, a), // x writes to a
+	read_address(y, a),  // y reads from a
+	reachable(x, y),     // x goes to y
+	write-address(z, a), // z writes to a
+	reachable(y, z).     // y reaches z
+
+.decl dead_write(wriet1: symbol, write2: symbol)
+
+dead_write(x, y) :-
+	write_address(x, a),
+	write_address(y, a),
+	!not_dead_write(x, y).
+
+.output dead_write
+
