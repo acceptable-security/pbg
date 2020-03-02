@@ -1,4 +1,9 @@
-#include "sqlite3.dl"
+.decl next_address(from: address, to: address)
+.input next_address
+.decl write_address(pc: address, dest: address)
+.input write_address
+.decl read_address(pc: address, from: address)
+.input read_address
 
 .decl reachable(from: symbol, to: symbol)
 
@@ -14,7 +19,7 @@ not_dead_write(x, z) :-
 	write-address(z, a), // z writes to a
 	reachable(y, z).     // y reaches z
 
-.decl dead_write(wriet1: symbol, write2: symbol)
+.decl dead_write(write1: symbol, write2: symbol)
 
 dead_write(x, y) :-
 	write_address(x, a),
