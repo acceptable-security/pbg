@@ -38,8 +38,8 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	for triplet := range ch {
 		pred := strings.ReplaceAll(triplet.predicate[1:len(triplet.predicate)-1], "-", "_")
 		writer := getFilePred(filename, pred, files)
-		subj := triplet.subject[1:len(subj)-1]
-		obj := triplet.object[1:len(obj)-1]
+		subj := triplet.subject[1:len(triplet.subject)-1]
+		obj := triplet.object[1:len(triplet.object)-1]
 		writer.WriteString(fmt.Sprintf("%s\t%s\n", subj, obj))
 	}
 
