@@ -32,7 +32,6 @@ func getFilePred(filename string, pred string, files map[string] DestFile) *bufi
 func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 	ch := pbg.QueryTripletAsync("g.V().Tag('subject').Out(null, 'predicate').Tag('object').All()")
 
-	foundRels := make(map [string] bool)
 	files := make(map[string] DestFile)
 
 	for triplet := range ch {
@@ -43,7 +42,7 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 		writer.WriteString(fmt.Sprintf("%s\t%s\n", subj, obj))
 	}
 
-	for pred, obj := range files {
+	for _, obj := range files {
 		obj.Writer.Flush()
 		obj.File.Close()
 	}
