@@ -115,8 +115,15 @@ func loadRawInstrTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] interfac
 			}
 
 			if ( idx > 1 ) {
+				// Form step nodes
+				lastIndex := fmt.Sprintf("step-%d", count)
 				count += 1
+				index := fmt.Sprintf("step-%d", count)
+
+				// Add tuples into database
 				ch <- []string{ last, "next-address", parts[0] }
+				ch <- []string{ index, "step-address", last }
+				ch <- []string { lastIndex, "next-step", index }
 			}
 
 			last = parts[0]

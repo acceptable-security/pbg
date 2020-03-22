@@ -1,9 +1,11 @@
-.decl next_address(from: address, to: address)
+.decl next_address(from: symbol, to: symbol)
 .input next_address
-.decl write_address(pc: address, dest: address)
+.decl write_address(pc: symbol, dest: symbol)
 .input write_address
-.decl read_address(pc: address, from: address)
+.decl read_address(pc: symbol, from: symbol)
 .input read_address
+.decl text_at_pc(line: symbol, pc: symbol)
+.input text_at_pc
 
 .decl reachable(from: symbol, to: symbol)
 
@@ -16,7 +18,7 @@ not_dead_write(x, z) :-
 	write_address(x, a), // x writes to a
 	read_address(y, a),  // y reads from a
 	reachable(x, y),     // x goes to y
-	write-address(z, a), // z writes to a
+	write_address(z, a), // z writes to a
 	reachable(y, z).     // y reaches z
 
 .decl dead_write(write1: symbol, write2: symbol)
