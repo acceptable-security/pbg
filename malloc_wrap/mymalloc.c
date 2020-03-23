@@ -2,8 +2,10 @@
 // http://www.cs.cmu.edu/afs/cs/academic/class/15213-s03/src/interposition/mymalloc.c
 // Adapted to its current form by Avi Saven
 
-#define __USE_GNU
+#include <stdlib.h>
 #include <stdio.h>
+
+#define __USE_GNU
 #include <dlfcn.h>
 
 static void* (*mallocp)(size_t size) = NULL;
