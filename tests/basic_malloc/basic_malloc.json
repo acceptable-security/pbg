@@ -1,0 +1,17 @@
+{
+    "files": {
+        "sourceFiles": [ "./tests/basic_malloc/test.c" ]
+    },
+    "elf": {
+        "binary": "./tests/basic_malloc/test"
+    },
+    "clang": {
+    	"sysIncludePaths": [ "/usr/include" ]
+    },
+    "rawmemtrace": {
+        "cmdLine": "./tests/basic_malloc/test"
+    },
+    "rawinstrtrace": {
+        "cmdLine": "./tests/basic_malloc/test"
+    }
+}

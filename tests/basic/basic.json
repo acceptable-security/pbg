@@ -8,9 +8,6 @@
     "clang": {
     	"sysIncludePaths": [ "/usr/include" ]
     },
-    "instrace": {
-    	"traceFile": "./tests/basic/instrace.test.13012.0000.log"
-    },
     "rawmemtrace": {
         "cmdLine": "./tests/basic/test"
     },
