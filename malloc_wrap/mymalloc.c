@@ -2,7 +2,7 @@
 // http://www.cs.cmu.edu/afs/cs/academic/class/15213-s03/src/interposition/mymalloc.c
 // Adapted to its current form by Avi Saven
 
-#define _USE_GNU
+#define __USE_GNU
 #include <stdio.h>
 #include <dlfcn.h>
 
