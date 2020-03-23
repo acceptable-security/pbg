@@ -8,8 +8,8 @@
 #define __USE_GNU
 #include <dlfcn.h>
 
-static void* (*mallocp)(size_t size) = NULL;
-static void (*freep)(void *) = NULL;
+void* (*mallocp)(size_t size) = NULL;
+void (*freep)(void *) = NULL;
 
 // TODO: print 
 
