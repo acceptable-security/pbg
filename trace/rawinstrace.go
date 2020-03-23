@@ -1,6 +1,7 @@
 package trace;
 
 import (
+	"fmt"
 	"log"
 	"io/ioutil"
 	"os"
