@@ -71,6 +71,8 @@ func loadRawInstrAllocTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] int
 		scanner := bufio.NewScanner(stderrObj)
 		var lastPC string
 		lastStep := "step-1"
+		idx := 0
+		count := 0
 
 		for scanner.Scan() {
 			text := scanner.Text()
