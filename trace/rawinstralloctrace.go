@@ -98,7 +98,7 @@ func loadRawInstrAllocTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] int
 				ch <- []string { lastStep, "realloc-old-addr", oldAddr }
 				ch <- []string { lastStep, "realloc-amt", amt }
 				ch <- []string { lastStep, "realloc-new-addr", newAddr }
-			} else if len(text) >= 6 && text[:7] == "calloc" {
+			} else if len(text) >= 6 && text[:6] == "calloc" {
 				var amt, cnt, addr string
 
 				fmt.Sscanf(text, "calloc %s %s %s", &amt, &cnt, &addr)
