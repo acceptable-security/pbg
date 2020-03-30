@@ -77,7 +77,11 @@ static int tls_idx;
 
 static void malloc_wrap_pre(void* wrapcxt, OUT void** user_data);
 static void malloc_wrap_post(void* wrapcxt, void* user_data);
-
+static void calloc_wrap_pre(void* wrapcxt, OUT void** user_data);
+static void calloc_wrap_post(void* wrapcxt, void* user_data);
+static void realloc_wrap_pre(void* wrapcxt, OUT void** user_data);
+static void realloc_wrap_post(void* wrapcxt, void* user_data);
+static void free_wrap_pre(void* wrapcxt, OUT void** user_data);
 
 static
 void instrace(void *drcontext) {
