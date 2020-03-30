@@ -1,7 +1,7 @@
 package trace;
 
 import (
-	"compress/gzip"
+	"fmt"
 	"log"
 	"io/ioutil"
 	"os"
