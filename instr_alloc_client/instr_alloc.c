@@ -76,7 +76,7 @@ static int tls_idx;
 #define MINSERT instrlist_meta_preinsert
 
 static void malloc_wrap_pre(void* wrapcxt, OUT void** user_data);
-static void malloc_wrap_post(void* wrapcxt, OUT void** user_data);
+static void malloc_wrap_post(void* wrapcxt, void* user_data);
 
 
 static
@@ -212,11 +212,30 @@ void event_thread_exit(void* drcontext) {
 
 static
 void module_load_event(void* drcontext, const module_data_t* mod, bool loaded) {
-    app_pc towrap = (app_pc) dr_get_proc_address(mod->handle, "malloc");
+    app_pc towrap;
+
+    towrap = (app_pc) dr_get_proc_address(mod->handle, "malloc");
 
     if ( towrap != NULL ) {
-        bool ok = drwrap_wrap(towrap, malloc_wrap_pre, malloc_wrap_post);
-        DR_ASSERT(ok);
+        INIT_OK(drwrap_wrap(towrap, malloc_wrap_pre, malloc_wrap_post));
+    }
+
+    towrap = (app_pc) dr_get_proc_address(mod->handle, "realloc");
+
+    if ( towrap != NULL ) {
+        INIT_OK(drwrap_wrap(towrap, realloc_wrap_pre, realloc_wrap_post));
+    }
+
+    towrap = (app_pc) dr_get_proc_address(mod->handle, "calloc");
+
+    if ( towrap != NULL ) {
+        INIT_OK(drwrap_wrap(towrap, calloc_wrap_pre, calloc_wrap_post));
+    }
+
+    towrap = (app_pc) dr_get_proc_address(mod->handle, "free");
+
+    if ( towrap != NULL ) {
+        INIT_OK(drwrap_wrap(towrap, free_wrap_pre, NULL));
     }
 }
 
@@ -275,17 +294,50 @@ void dr_client_main(client_id_t id, int argc, const char* argv[]) {
 
 static
 void malloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
-    // malloc(size) or HeapAlloc(heap, flags, size) 
     size_t sz = (size_t) drwrap_get_arg(wrapcxt, 0);
-
-    // find the maximum malloc request
-    dr_fprintf(STDERR, "malloc %zu ", sz);
-
-    *user_data = (void *)sz;
+    fprintf(stderr, "malloc %zu ", sz);
 }
 
 static
 void malloc_wrap_post(void* wrapcxt, OUT void** user_data) {
+    ptr_int_t pt = (ptr_int_t) drwrap_get_retval(wrapcxt);
+    fprintf(stderr, "%lx\n", pt);
+}
+
+static
+void realloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
+    ptr_int_t pt = (ptr_int_t) drwrap_get_arg(wrapcxt, 0);
+    size_t sz = (size_t) drwrap_get_arg(wrapcxt, 1);
+
+    fprintf(stderr, "realloc %lx %zu ", pt, sz);
+}
+
+static
+void realloc_wrap_post(void* wrapcxt, OUT void** user_data) {
     ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
-    dr_fprintf(STDERR, "%lx\n", ptr);
+    fprintf(stderr, "%lx\n", ptr);
+}
+
+static
+void calloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
+    size_t sz = (size_t) drwrap_get_arg(wrapcxt, 0);
+    size_t ct = (size_t) drwrap_get_arg(wrapcxt, 1);
+
+    fprintf(stderr, "calloc %zu %zu ", sz, ct);
+}
+
+static
+void calloc_wrap_post(void* wrapcxt, OUT void** user_data) {
+    ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
+    fprintf(stderr, "%lx\n", ptr);
+}
+
+static
+void free_wrap_pre(void* wrapcxt, OUT void** user_data) {
+    ptr_int_t pt = (ptr_int_t) drwrap_get_arg(wrapcxt, 0);
+
+    // find the maximum malloc request
+    fprintf(stderr, "free %lx\n", pt);
+
+    *user_data = (void *)sz;
 }
