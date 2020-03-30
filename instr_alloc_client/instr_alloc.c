@@ -338,6 +338,4 @@ void free_wrap_pre(void* wrapcxt, OUT void** user_data) {
 
     // find the maximum malloc request
     fprintf(stderr, "free 0x%lx\n", pt);
-
-    *user_data = (void *)sz;
 }
