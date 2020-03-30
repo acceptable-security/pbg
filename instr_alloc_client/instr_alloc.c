@@ -303,7 +303,7 @@ void malloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
 }
 
 static
-void malloc_wrap_post(void* wrapcxt, OUT void** user_data) {
+void malloc_wrap_post(void* wrapcxt, void* user_data) {
     ptr_int_t pt = (ptr_int_t) drwrap_get_retval(wrapcxt);
     fprintf(stderr, "0x%lx\n", pt);
 }
@@ -317,7 +317,7 @@ void realloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
 }
 
 static
-void realloc_wrap_post(void* wrapcxt, OUT void** user_data) {
+void realloc_wrap_post(void* wrapcxt, void* user_data) {
     ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
     fprintf(stderr, "0x%lx\n", ptr);
 }
@@ -331,7 +331,7 @@ void calloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
 }
 
 static
-void calloc_wrap_post(void* wrapcxt, OUT void** user_data) {
+void calloc_wrap_post(void* wrapcxt, void* user_data) {
     ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
     fprintf(stderr, "0x%lx\n", ptr);
 }
