@@ -7,24 +7,28 @@
 .decl malloc_amt(at_step: step, size: number)
 .decl malloc_ptr(at_step: step, ptr: number)
 
-.decl next_address(from: address, to: address)
 .decl write_address(pc: address, dest: address)
 .decl read_address(pc: address, from: address)
 
 .decl free(pc: address, addr: address)
 .decl text_at_pc(line: symbol, pc: address)
 
+.input next_step
+.input step_address
 .input write_address
 .input read_address
-.input malloc
+.input malloc_amt
+.input malloc_ptr
 .input free
 .input text_at_pc
 
 .decl malloc(at_step: step, size: number, heap_addr: address)
 malloc(a, s, h) :- malloc_amt(a, s), malloc_ptr(a, h).
 
-.decl next_step_no_free(from_step: step, next_step: step, heap_addr: address)
-next_step_no_free(x, y, h) :- next_step(x, y), malloc_ptr(_, h), !free(y, h).
+.decl next_step_no_free(from_step: step, dest_step: step, heap_addr: address)
+next_step_no_free(x, y, h) :-
+	next_step(x, y), malloc_ptr(_, h),
+	!free(y, h).
 
 .decl reach_without_free(from_step: step, dest_step: step, heap_addr: address)
 reach_without_free(x, y, h) :-
@@ -43,7 +47,9 @@ invalid_heap_access(p, d, t) :-
     (d < d2 ; d >= d2 + s). // Bounds check
 
 .decl invalid_free(pc: address, dest: address)
-invalid_free(p, d) :- free(p, d), !malloc_reach(_, p, _, _).
+invalid_free(p, d) :-
+	free(s1, d), !malloc_reach(_, s1, _, _),
+	step_address(s1, p).
 
 .output invalid_free
 .output invalid_heap_access
