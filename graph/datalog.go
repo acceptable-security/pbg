@@ -17,7 +17,7 @@ func rewriteNumber(potentialNumber string) string {
 	if len(potentialNumber) >= 2 && potentialNumber[:2] == "0x" {
 		foundNumber, err := strconv.ParseUint(potentialNumber[2:], 16, 64)
 
-		if err {
+		if err != nil {
 			return potentialNumber
 		}
 		
