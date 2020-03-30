@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"os"
 	"strings"
+	"strconv"
 )
 
 type DestFile struct {
@@ -14,9 +15,13 @@ type DestFile struct {
 
 func rewriteNumber(potentialNumber string) string {
 	if len(potentialNumber) >= 2 && potentialNumber[:2] == "0x" {
-		var foundNumber uint
-		fmt.Sscanf(potentialNumber, "0x%x", &foundNumber)
-		return fmt.Sprintf("%u", foundNumber)
+		foundNumber, err := strconv.ParseUint(potentialNumber[2:], 16, 64)
+
+		if err {
+			return potentialNumber
+		}
+		
+		return strconv.FormatUint(foundNumber, 10)
 	} else {
 		return potentialNumber
 	}
