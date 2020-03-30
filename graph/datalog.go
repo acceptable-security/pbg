@@ -12,6 +12,16 @@ type DestFile struct {
 	Writer *bufio.Writer
 };
 
+func rewriteNumber(potentialNumber string) string {
+	if len(potentialNumber) > 0 && potentialNumber[:2] == "0x" {
+		var foundNumber number
+		fmt.Sscanf("0x%x", &potentialNumber)
+		return fmt.Sprintf("%u", foundNumber)
+	} else {
+		return potentialNumber
+	}
+}
+
 func getFilePred(filename string, pred string, files map[string] DestFile) *bufio.Writer {
 	if obj, ok := files[pred]; ok {
 		return obj.Writer
@@ -39,7 +49,7 @@ func (pbg *ProgramBehaviorGraph) GenerateDatalog(filename string) {
 		writer := getFilePred(filename, pred, files)
 		subj := triplet.subject[1:len(triplet.subject)-1]
 		obj := triplet.object[1:len(triplet.object)-1]
-		writer.WriteString(fmt.Sprintf("%s\t%s\n", subj, obj))
+		writer.WriteString(fmt.Sprintf("%s\t%s\n", rewriteNumber(subj), rewriteNumber(obj)))
 	}
 
 	for _, obj := range files {
