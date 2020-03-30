@@ -13,7 +13,7 @@ type DestFile struct {
 };
 
 func rewriteNumber(potentialNumber string) string {
-	if len(potentialNumber) > 0 && potentialNumber[:2] == "0x" {
+	if len(potentialNumber) >= 2 && potentialNumber[:2] == "0x" {
 		var foundNumber uint
 		fmt.Sscanf(potentialNumber, "0x%x", &foundNumber)
 		return fmt.Sprintf("%u", foundNumber)
