@@ -10,7 +10,7 @@
 .decl write_address(pc: address, dest: address)
 .decl read_address(pc: address, from: address)
 
-.decl free(pc: address, addr: address)
+.decl free(at_step: step, addr: address)
 .decl text_at_pc(line: symbol, pc: address)
 
 .input next_step
@@ -42,7 +42,7 @@ malloc_reach(a, d, h, s) :-
 .decl invalid_heap_access(pc: address, dest: address, type: symbol)
 invalid_heap_access(p, d, t) :-
     (write_address(p, d), t="write"; read_address(p, d), t="read"),
-    step_address(p, x),
+    step_address(x, p),
     malloc_reach(_, x, d2, s),
     (d < d2 ; d >= d2 + s). // Bounds check
 
