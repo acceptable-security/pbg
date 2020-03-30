@@ -88,7 +88,7 @@ void instrace(void *drcontext) {
      * for repeated printing that dominates performance, as the printing does here.
      */
     for ( ins_ref_t* ins_ref = (ins_ref_t*) data->buf_base; ins_ref < buf_ptr; ins_ref++ ) {
-        fprintf(stderr, "%lx\n", (ptr_uint_t) ins_ref->pc);
+        fprintf(stderr, "0x%lx\n", (ptr_uint_t) ins_ref->pc);
     }
 
     BUF_PTR(data->seg_base) = data->buf_base;
@@ -301,7 +301,7 @@ void malloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
 static
 void malloc_wrap_post(void* wrapcxt, OUT void** user_data) {
     ptr_int_t pt = (ptr_int_t) drwrap_get_retval(wrapcxt);
-    fprintf(stderr, "%lx\n", pt);
+    fprintf(stderr, "0x%lx\n", pt);
 }
 
 static
@@ -309,13 +309,13 @@ void realloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
     ptr_int_t pt = (ptr_int_t) drwrap_get_arg(wrapcxt, 0);
     size_t sz = (size_t) drwrap_get_arg(wrapcxt, 1);
 
-    fprintf(stderr, "realloc %lx %zu ", pt, sz);
+    fprintf(stderr, "realloc 0x%lx %zu ", pt, sz);
 }
 
 static
 void realloc_wrap_post(void* wrapcxt, OUT void** user_data) {
     ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
-    fprintf(stderr, "%lx\n", ptr);
+    fprintf(stderr, "0x%lx\n", ptr);
 }
 
 static
@@ -329,7 +329,7 @@ void calloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
 static
 void calloc_wrap_post(void* wrapcxt, OUT void** user_data) {
     ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
-    fprintf(stderr, "%lx\n", ptr);
+    fprintf(stderr, "0x%lx\n", ptr);
 }
 
 static
@@ -337,7 +337,7 @@ void free_wrap_pre(void* wrapcxt, OUT void** user_data) {
     ptr_int_t pt = (ptr_int_t) drwrap_get_arg(wrapcxt, 0);
 
     // find the maximum malloc request
-    fprintf(stderr, "free %lx\n", pt);
+    fprintf(stderr, "free 0x%lx\n", pt);
 
     *user_data = (void *)sz;
 }
