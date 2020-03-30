@@ -121,7 +121,7 @@ func loadRawInstrAllocTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] int
 
 					// Add tuples into database
 					ch <- []string{ lastPC, "next-address", text }
-					ch <- []string{ index, "step-address", lastPC }
+					ch <- []string{ index, "step-address", text }
 					ch <- []string{ lastStep, "next-step", index }
 
 					lastStep = index
