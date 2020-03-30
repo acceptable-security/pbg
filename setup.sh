@@ -32,11 +32,11 @@ validate_cmd "apt-get"
 curr_dir=$(pwd)
 
 log_info "Installing dependencies for dynamorio"
-{
-	sudo apt-get install cmake g++ g++-multilib doxygen transfig imagemagick ghostscript git zlib1g-dev
-} || {
-	log_error "Failed to install dependencies for dynamorio"
-}
+# {
+# 	sudo apt-get install cmake g++ g++-multilib doxygen transfig imagemagick ghostscript git zlib1g-dev
+# } || {
+#	log_error "Failed to install dependencies for dynamorio"
+# }
 
 log_info "Cloning dynamorio to parent directory"
 {
@@ -62,20 +62,20 @@ log_info "Building dynamorio"
 	log_error "Failed to build dynamorio"
 }
 
-log_info "Cloning capstone to the parent dictory"
-{
-	cd $curr_dir && \
-	git clone https://github.com/aquynh/capstone.git ../capstone/
-} || {
-	log_error "Failed to clone capstone"
-}
-
-log_info "Installing capstone from parent directory"
-{
-	cd ../capstone/ && \
-	sh ./make.sh && \
-	sudo sh ./make.sh install
-}
+#log_info "Cloning capstone to the parent dictory"
+#{
+#	cd $curr_dir && \
+#	git clone https://github.com/aquynh/capstone.git ../capstone/
+#} || {
+#	log_error "Failed to clone capstone"
+#}
+#
+#log_info "Installing capstone from parent directory"
+#{
+#	cd ../capstone/ && \
+#	sh ./make.sh # && \
+#	# sudo sh ./make.sh install
+#}
 
 log_info "Building pbg"
 {

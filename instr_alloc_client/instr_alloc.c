@@ -38,7 +38,7 @@
 #include "drreg.h"
 
 #define NULL_TERMINATE(buf) (buf)[(sizeof((buf)) / sizeof((buf)[0])) - 1] = '\0'
-#define INIT_OK(EXPR) do { bool ok = (EXPR); DR_ASSERT(ok) } while(0)
+#define INIT_OK(EXPR) do { bool ok = (EXPR); DR_ASSERT(ok); } while(0)
 
 // Each ins_ref_t describes an executed instruction.
 typedef struct _ins_ref_t {
@@ -75,23 +75,20 @@ static int tls_idx;
 #define BUF_PTR(tls_base) *(ins_ref_t **)TLS_SLOT(tls_base, INSTRACE_TLS_OFFS_BUF_PTR)
 #define MINSERT instrlist_meta_preinsert
 
-static void malloc_wrap_pre(void *wrapcxt, OUT void **user_data);
-static void malloc_wrap_post(void *wrapcxt, OUT void **user_data);
+static void malloc_wrap_pre(void* wrapcxt, OUT void** user_data);
+static void malloc_wrap_post(void* wrapcxt, OUT void** user_data);
 
 
 static
 void instrace(void *drcontext) {
-    per_thread_t *data;
-    , *buf_ptr;
-
-    data = drmgr_get_tls_field(drcontext, tls_idx);
+    per_thread_t* data = drmgr_get_tls_field(drcontext, tls_idx);
     ins_ref_t* buf_ptr = BUF_PTR(data->seg_base);
 
     /* We use libc's fprintf as it is buffered and much faster than dr_fprintf
      * for repeated printing that dominates performance, as the printing does here.
      */
     for ( ins_ref_t* ins_ref = (ins_ref_t*) data->buf_base; ins_ref < buf_ptr; ins_ref++ ) {
-        fprintf(STDERR, "%p\n", (ptr_uint_t)ins_ref->pc, decode_opcode_name(ins_ref->opcode));
+        fprintf(stderr, "%lx\n", (ptr_uint_t) ins_ref->pc);
     }
 
     BUF_PTR(data->seg_base) = data->buf_base;
@@ -206,6 +203,14 @@ void event_thread_init(void* drcontext) {
 }
 
 static
+void event_thread_exit(void* drcontext) {
+    instrace(drcontext); /* dump any remaining buffer entries */
+    per_thread_t* data = drmgr_get_tls_field(drcontext, tls_idx);
+    dr_raw_mem_free(data->buf_base, MEM_BUF_SIZE);
+    dr_thread_free(drcontext, data, sizeof(per_thread_t));
+}
+
+static
 void module_load_event(void* drcontext, const module_data_t* mod, bool loaded) {
     app_pc towrap = (app_pc) dr_get_proc_address(mod->handle, "malloc");
 
@@ -223,7 +228,7 @@ void module_exit_event(void) {
     INIT_OK(drmgr_unregister_thread_exit_event(event_thread_exit));
     INIT_OK(drmgr_unregister_bb_insertion_event(event_app_instruction));
 
-    drreg_status_t regok = drreg_exit(); DR_ASSERT(regok != DRREG_SUCCESS);
+    drreg_status_t regok = drreg_exit(); DR_ASSERT(regok == DRREG_SUCCESS);
 
     drwrap_exit();
     drmgr_exit();
@@ -247,7 +252,7 @@ void dr_client_main(client_id_t id, int argc, const char* argv[]) {
 
     // Register load/exit events
     INIT_OK(drmgr_register_module_load_event(module_load_event));
-    INIT_OK(dr_register_exit_event(module_exit_event));
+    dr_register_exit_event(module_exit_event);
     INIT_OK(drmgr_register_thread_init_event(event_thread_init));
     INIT_OK(drmgr_register_thread_exit_event(event_thread_exit));
     INIT_OK(drmgr_register_bb_instrumentation_event(NULL, event_app_instruction, NULL));
@@ -273,8 +278,8 @@ void malloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
     // malloc(size) or HeapAlloc(heap, flags, size) 
     size_t sz = (size_t) drwrap_get_arg(wrapcxt, 0);
 
-    // find the maximum malloc request 
-    dr_fprintf(STDERR, "malloc %zu", sz);
+    // find the maximum malloc request
+    dr_fprintf(STDERR, "malloc %zu ", sz);
 
     *user_data = (void *)sz;
 }
@@ -282,5 +287,5 @@ void malloc_wrap_pre(void* wrapcxt, OUT void** user_data) {
 static
 void malloc_wrap_post(void* wrapcxt, OUT void** user_data) {
     ptr_int_t ptr = (ptr_int_t) drwrap_get_retval(wrapcxt);
-    dr_fprintf(STDERR, "%p\n", wrapcxt);
+    dr_fprintf(STDERR, "%lx\n", ptr);
 }
