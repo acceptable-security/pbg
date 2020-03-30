@@ -127,7 +127,7 @@ func loadRawInstrAllocTrace(pbg *graph.ProgramBehaviorGraph, opt map[string] int
 					lastStep = index
 				}
 
-				lastPC = parts[0]
+				lastPC = text
 			}
 		}
 
