@@ -48,7 +48,7 @@ for i in $(seq 1 $TEST_ITERS); do
 		echo "Creating project $name"
 		TIMEFORMAT='%lU'
 
-		create_time=$(time $PBG project create -db=$db -backend=$BACKEND -config=$conf 2>&1 1> $OUTPUTDIR/$name.create.$i.txt)
+		create_time=$(time ( $PBG project create -db=$db -backend=$BACKEND -config=$conf ) 2>&1 1>$OUTPUTDIR/$name.create.$i.txt)
 
 		# TODO: on validation switch i => f
 		echo "Removing old datalog if present"
@@ -56,10 +56,10 @@ for i in $(seq 1 $TEST_ITERS); do
 		mkdir -p $OUTPUTDIR/datalog_dir/
 
 		echo "Creating datalog directories"
-		query_time=$(time $PBG project query -db=$db -backend=$BACKEND -datalog=$OUTPUTDIR/datalog_dir/ 2>&1 1> $OUTPUTDIR/$name.query.$i.txt)
+		query_time=$(time ( $PBG project query -db=$db -backend=$BACKEND -datalog=$OUTPUTDIR/datalog_dir/ ) 2>&1 1>$OUTPUTDIR/$name.query.$i.txt)
 
 		echo "Running memory tests"
-		test_time=$(time $SOUFFLE --fact-dir=$OUTPUTDIR/datalog_dir -c -j64 ./queries/mem-test.dl)	
+		test_time=$(time ( $SOUFFLE --fact-dir=$OUTPUTDIR/datalog_dir -c -j64 ./queries/mem-test.dl) 2>&1 1>$OUTPUTDIR/$name.test.$i.txt)
 
 		echo "Saving results"
 		echo "$name\t$i\t$create_time\t$query_time\t$test_time" >> $RESULTS
