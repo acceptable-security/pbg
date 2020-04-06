@@ -47,6 +47,7 @@ for i in $(seq 1 $TEST_ITERS); do
 
 		echo "Creating project $name"
 		TIMEFORMAT='%lU'
+		echo "Executing: $PBG project create -db=$db -backend=$BACKEND -config=$conf 2>&1 1> $OUTPUTDIR/$name.create.$i.txt"
 		create_time=$(time $PBG project create -db=$db -backend=$BACKEND -config=$conf 2>&1 1> $OUTPUTDIR/$name.create.$i.txt)
 
 		# TODO: on validation switch i => f
