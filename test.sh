@@ -25,7 +25,7 @@ read -t 60
 echo "Starting in 5 seconds..."; sleep 5
 
 mkdir -p $OUTPUTDIR
-echo "NAME\tITER\tCREATE_TIME\tQUERY_TIME\tTEST_TIME" > $RESULTS
+echo -e "NAME\tITER\tCREATE_TIME\tQUERY_TIME\tTEST_TIME" > $RESULTS
 
 
 for i in $(seq 1 $TEST_ITERS); do
@@ -46,7 +46,7 @@ for i in $(seq 1 $TEST_ITERS); do
 		fi
 
 		echo "Creating project $name"
-		TIMEFORMAT='%lU'
+		TIMEFORMAT='time=%lU mem=%K RSS=%M'
 
 		create_time=$(time ( $PBG project create -db=$db -backend=$BACKEND -config=$conf 2>&3 1>&3 0>&3 ) 3>$OUTPUTDIR/$name.create.$i.txt)
 
@@ -59,9 +59,9 @@ for i in $(seq 1 $TEST_ITERS); do
 		query_time=$(time ( $PBG project query -db=$db -backend=$BACKEND -datalog=$OUTPUTDIR/datalog_dir/ 2>&3 1>&3 0>&3 ) 3>$OUTPUTDIR/$name.query.$i.txt)
 
 		echo "Running memory tests"
-		test_time=$(time ( $SOUFFLE --fact-dir=$OUTPUTDIR/datalog_dir -c -j64 ./queries/mem-test.dl  2>&3 1>&3 0>&3) 23$OUTPUTDIR/$name.test.$i.txt)
+		test_time=$(time ( $SOUFFLE --fact-dir=$OUTPUTDIR/datalog_dir -c -j64 ./queries/mem-test.dl  2>&3 1>&3 0>&3) 3>$OUTPUTDIR/$name.test.$i.txt)
 
 		echo "Saving results"
-		echo "$name\t$i\t$create_time\t$query_time\t$test_time" >> $RESULTS
+		echo -e "$name\t$i\t$create_time\t$query_time\t$test_time" >> $RESULTS
 	done
 done
