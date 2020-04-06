@@ -37,7 +37,13 @@ for i in $(seq 1 $TEST_ITERS); do
 
 		# Compute arguments
 		db="$DATALOC/output_dir/$name.db"
+		rm -f $db
 		conf="$test/$name.json"
+
+		if [ ! -f "$conf" ]; then
+			echo "$conf does not exist, skipping $name"
+			continue
+		fi
 
 		echo "Creating project $name"
 		TIMEFORMAT='%lU'
