@@ -47,7 +47,7 @@ for i in $(seq 1 $TEST_ITERS); do
 
 		echo "Creating project $name"
 
-		create_time=$(command time -f 'time=%lU mem=%k RSS=%M' ( $PBG project create -db=$db -backend=$BACKEND -config=$conf 2>&3 1>&3 0>&3 ) 3>$OUTPUTDIR/$name.create.$i.txt)
+		create_time=$(command time -f 'time=%lU mem=%k RSS=%M' bash -c "$PBG project create -db=$db -backend=$BACKEND -config=$conf 2>&3 1>&3 0>&3" 3>$OUTPUTDIR/$name.create.$i.txt)
 
 		# TODO: on validation switch i => f
 		echo "Removing old datalog if present"
@@ -55,10 +55,10 @@ for i in $(seq 1 $TEST_ITERS); do
 		mkdir -p $OUTPUTDIR/datalog_dir/
 
 		echo "Creating datalog directories"
-		query_time=$(command time -f 'time=%lU mem=%k RSS=%M' ( $PBG project query -db=$db -backend=$BACKEND -datalog=$OUTPUTDIR/datalog_dir/ 2>&3 1>&3 0>&3 ) 3>$OUTPUTDIR/$name.query.$i.txt)
+		query_time=$(command time -f 'time=%lU mem=%k RSS=%M' bash -c "$PBG project query -db=$db -backend=$BACKEND -datalog=$OUTPUTDIR/datalog_dir/ 2>&3 1>&3 0>&3" 3>$OUTPUTDIR/$name.query.$i.txt)
 
 		echo "Running memory tests"
-		test_time=$(command time -f 'time=%lU mem=%k RSS=%M' ( $SOUFFLE --fact-dir=$OUTPUTDIR/datalog_dir -c -j64 ./queries/mem-test.dl  2>&3 1>&3 0>&3) 3>$OUTPUTDIR/$name.test.$i.txt)
+		test_time=$(command time -f 'time=%lU mem=%k RSS=%M' bash -c "$SOUFFLE --fact-dir=$OUTPUTDIR/datalog_dir -c -j64 ./queries/mem-test.dl  2>&3 1>&3 0>&3" 3>$OUTPUTDIR/$name.test.$i.txt)
 
 		echo "Saving results"
 		echo -e "$name\t$i\t$create_time\t$query_time\t$test_time" >> $RESULTS
