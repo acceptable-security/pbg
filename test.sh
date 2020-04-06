@@ -5,11 +5,11 @@ set -e
 PBG=./pbg
 TESTS=$(ls tests/)
 TEST_ITERS=1
-OUTPUTDIR=/localdisk/asaven-pbg/test_output_dir/
+OUTPUTDIR="/localdisk/asaven-pbg/test_$(date +%Y-%m-%d_%H-%M-%S)"
 BACKEND=sqlite
 SOUFFLE=/localdisk/asaven-pbg/souffle-1.7.1/usr/bin/souffle
 
-RESULTS="$OUTPUTDIR/results.$(date +%Y-%m-%d_%H-%M-%S).txt"
+RESULTS="$OUTPUTDIR/results.txt"
 
 echo "Validate parameters before continuing:"
 echo ""
@@ -52,7 +52,8 @@ for i in $(seq 1 $TEST_ITERS); do
 
 		# TODO: on validation switch i => f
 		echo "Removing old datalog if present"
-		rm -ri $OUTPUTDIR/datalog_dir/
+		rm -rf $OUTPUTDIR/datalog_dir/
+		mkdir -p $OUTPUTDIR/datalog_dir/
 
 		echo "Creating datalog directories"
 		query_time=$(time $PBG project query -db=$db -backend=$BACKEND -datalog=$OUTPUTDIR/datalog_dir/ 2>&1 1> $OUTPUTDIR/$name.query.$i.txt)
