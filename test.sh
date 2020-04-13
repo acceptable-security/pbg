@@ -5,7 +5,7 @@ set -e
 PBG=./pbg
 TESTS=$(ls tests/)
 TEST_ITERS=1
-OUTPUTDIR="/localdisk/asaven-pbg/test_$(date +%Y-%m-%d_%H-%M-%S)"
+OUTPUTDIR="/net/vega.pyx.cs.rochester.edu/localdisk2/asaven-pbg/test_$(date +%Y-%m-%d_%H-%M-%S)"
 BACKEND=sqlite
 SOUFFLE=/localdisk/asaven-pbg/souffle-1.7.1/usr/bin/souffle
 
