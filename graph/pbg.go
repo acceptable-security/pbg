@@ -176,7 +176,7 @@ func (pbg *ProgramBehaviorGraph) AddRelationFunc(produce func (chan []string)) {
 
 		if len(tmpBuffer) >= upperBound {
 			pbg.AddRelationBulk(tmpBuffer);
-			tmpBuffer := make([][]string, 0);
+			tmpBuffer = make([][]string, 0);
 			upperBound = upperBound * 2
 		}
 	}
