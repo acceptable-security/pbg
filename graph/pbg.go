@@ -169,14 +169,14 @@ func (pbg *ProgramBehaviorGraph) AddRelationFunc(produce func (chan []string)) {
 	go produce(relationChannel)
 
 	tmpBuffer := make([][]string, 0);
-	upperBound := 1000
+	upperBound := 30000
 
 	for output := range relationChannel {
 		tmpBuffer = append(tmpBuffer, output)
 
 		if len(tmpBuffer) >= upperBound {
 			pbg.AddRelationBulk(tmpBuffer);
-			tmpBuffer = tmpBuffer[:0];
+			tmpBuffer := make([][]string, 0);
 			upperBound = upperBound * 2
 		}
 	}
