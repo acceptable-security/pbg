@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+	_ "net/http/pprof"
 	"fmt"
 	"os"
 	// "log"
@@ -38,5 +40,9 @@ func main() {
 	default:
 		fmt.Printf("Unknown command %s\n", os.Args[1])
 		genUsage()
+	}
+
+	if os.Args[len(os.Args) -1] == "-debug" {
+		http.ListenAndServe("localhost:8080", nil)
 	}
 }

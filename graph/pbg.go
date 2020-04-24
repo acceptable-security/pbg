@@ -142,14 +142,14 @@ func (pbg *ProgramBehaviorGraph) AddRelationBulk(data [][]string) {
 		return
 	}
 
-	quads := make([]quad.Quad, 0);
-
+	quads := make([]quad.Quad, len(data));
+	i := 0
 	for _, piece := range data {
 		if len(piece) != 3 {
-			continue;
+			panic("Invalid bulk piece")
 		}
-
-		quads = append(quads, quad.Make(piece[0], piece[1], piece[2], ""));
+		quads[i] = quad.Make(piece[0], piece[1], piece[2], "")
+		// quads = append(quads, quad.Make(piece[0], piece[1], piece[2], ""));
 	}
 
 	writer := graph.NewWriter(pbg.store.QuadWriter)
@@ -158,6 +158,8 @@ func (pbg *ProgramBehaviorGraph) AddRelationBulk(data [][]string) {
 	if err != nil {
 		panic(err);
 	}
+
+	quads = nil
 }
 
 // Executes a function and chunks up its output to add to addRealtionBulk
@@ -167,7 +169,7 @@ func (pbg *ProgramBehaviorGraph) AddRelationFunc(produce func (chan []string)) {
 	go produce(relationChannel)
 
 	tmpBuffer := make([][]string, 0);
-	upperBound := 10000
+	upperBound := 1000
 
 	for output := range relationChannel {
 		tmpBuffer = append(tmpBuffer, output)
