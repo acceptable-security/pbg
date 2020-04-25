@@ -34,6 +34,13 @@ func main() {
 	// 	log.SetOutput(f)
 	// }
 
+	if os.Args[len(os.Args) -1] == "-debug" {
+		go func() {
+			http.ListenAndServe("localhost:8080", nil)
+		}()
+		os.Args = os.Args[:len(os.Args) - 1]
+	}
+
 	switch os.Args[1] {
 	case "database": databaseCmd();
 	case "project": projectCmd();
@@ -42,7 +49,4 @@ func main() {
 		genUsage()
 	}
 
-	if os.Args[len(os.Args) -1] == "-debug" {
-		http.ListenAndServe("localhost:8080", nil)
-	}
 }

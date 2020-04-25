@@ -159,6 +159,7 @@ func (pbg *ProgramBehaviorGraph) AddRelationBulk(data [][]string) {
 		panic(err);
 	}
 
+	writer.Close()
 	quads = nil
 }
 
