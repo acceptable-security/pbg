@@ -152,14 +152,7 @@ func (pbg *ProgramBehaviorGraph) AddRelationBulk(data [][]string) {
 		// quads = append(quads, quad.Make(piece[0], piece[1], piece[2], ""));
 	}
 
-	writer := graph.NewWriter(pbg.store.QuadWriter)
-	_, err := writer.WriteQuads(quads)
-
-	if err != nil {
-		panic(err);
-	}
-
-	writer.Close()
+	pbg.store.QuadWriter.AddQuadSet(quads)
 	quads = nil
 }
 
